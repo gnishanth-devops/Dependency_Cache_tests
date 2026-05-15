@@ -1,4 +1,4 @@
-name: Node dependency demo
+name: Node dependency cache demo
 
 on:
   push:
@@ -14,20 +14,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: cache npm dependencies
         id: cache-npm
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-npm-
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}
+
       - name: Show cache status
-        run: |
-         echo "Cache Hit = ${{ steps.cache-npm.outputs.cache-hit }}"
+        if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        continue-on-error: true
+        run: npm list
+
       - name: Install Dependencies
         run: npm install
+
       - name: Run Application
-        run: |
-          node app.js &
-          sleep 10
+        run: npm run build
