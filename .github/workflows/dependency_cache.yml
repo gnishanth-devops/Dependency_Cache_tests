@@ -8,7 +8,8 @@ jobs:
   node_cache:
     runs-on: ubuntu-latest
     defaults:
-      working-directory: ./src
+      run:
+        working-directory: ./src
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
