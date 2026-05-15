@@ -1,0 +1,15 @@
+{
+  "name": "node-cache-demo",
+  "version": "1.0.0",
+  "description": "GitHub Actions cache demo",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "axios": "^1.7.2",
+    "lodash": "^4.17.21"
+  }
+}

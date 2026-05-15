@@ -1,0 +1,31 @@
+name: Node dependency demo
+
+on:
+  push:
+    branches: main
+
+jobs:
+  node_cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+      - name: setup node js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: cache npm dependencies
+        id: cache-npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      - name: Show cache status
+        run: |
+         echo "Cache Hit = ${{ steps.cache-npm.outputs.cache-hit }}"
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Application
+        run: node app.js
